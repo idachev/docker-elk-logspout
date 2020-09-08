@@ -19,7 +19,7 @@ services:
         source: ./data
         target: /usr/share/elasticsearch/data
     environment:
-      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+      ES_JAVA_OPTS: "-Xmx4g -Xms1g -Xss8m"
       ELASTIC_PASSWORD: changeme
       # Use single node discovery in order to disable production mode and avoid bootstrap checks
       # see https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
@@ -46,7 +46,7 @@ services:
         target: /usr/share/logstash/pipeline
         read_only: true
     environment:
-      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+      LS_JAVA_OPTS: "-Xmx1g -Xms512m -Xss4m"
     networks:
       - elk
     depends_on:
