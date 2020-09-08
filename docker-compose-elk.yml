@@ -16,9 +16,6 @@ services:
       - type: bind
         source: ./data
         target: /usr/share/elasticsearch/data
-    ports:
-      - "9200:9200"
-      - "9300:9300"
     environment:
       ES_JAVA_OPTS: "-Xmx256m -Xms256m"
       ELASTIC_PASSWORD: changeme
@@ -44,10 +41,6 @@ services:
         source: ./logstash/pipeline
         target: /usr/share/logstash/pipeline
         read_only: true
-    ports:
-      - "5000:5000/tcp"
-      - "5000:5000/udp"
-      - "9600:9600"
     environment:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
     networks:
@@ -84,7 +77,7 @@ services:
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock
     environment:
-      RAW_FORMAT: '{ "container" : "{{ .Container.Name }}", "labels": {{ toJSON .Container.Config.Labels }}, "timestamp": "{{ .Time.Format "2006-01-02T15:04:05.000Z07:00" }}", "source" : "{{ .Source }}", "message": {{ toJSON .Data }} }'
+      RAW_FORMAT: '{ "container" : "{{ .Container.Name }}", "labels": {{ toJSON .Container.Config.Labels }}, "timestamp": "{{ .Time.Format "2006-01-02T15:04:05.000000Z07:00" }}", "source" : "{{ .Source }}", "message": {{ toJSON .Data }} }'
       ALLOW_TTY: 'true'
     networks:
       - elk
