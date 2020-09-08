@@ -8,6 +8,8 @@ services:
         ELK_VERSION: $ELK_VERSION
     restart: unless-stopped
     container_name: elk_elasticsearch
+    labels:
+      local.elk: true
     volumes:
       - type: bind
         source: ./elasticsearch/config/elasticsearch.yml
@@ -32,6 +34,8 @@ services:
         ELK_VERSION: $ELK_VERSION
     restart: unless-stopped
     container_name: elk_logstash
+    labels:
+      local.elk: true
     volumes:
       - type: bind
         source: ./logstash/config/logstash.yml
@@ -55,6 +59,8 @@ services:
         ELK_VERSION: $ELK_VERSION
     restart: unless-stopped
     container_name: elk_kibana
+    labels:
+      local.elk: true
     volumes:
       - type: bind
         source: ./kibana/config/kibana.yml
@@ -71,6 +77,8 @@ services:
     image: gliderlabs/logspout:v3.2.11
     restart: unless-stopped
     container_name: elk_logspout
+    labels:
+      local.elk: true
     command: 'udp://logstash:5000'
     links:
       - logstash
@@ -79,6 +87,7 @@ services:
     environment:
       RAW_FORMAT: '{ "container" : "{{ .Container.Name }}", "labels": {{ toJSON .Container.Config.Labels }}, "timestamp": "{{ .Time.Format "2006-01-02T15:04:05.000000Z07:00" }}", "source" : "{{ .Source }}", "message": {{ toJSON .Data }} }'
       ALLOW_TTY: 'true'
+      EXCLUDE_LABELS: "${LOGSPOUNT_EXCLUDE_LABELS}"
     networks:
       - elk
     depends_on:
